@@ -50,7 +50,7 @@ fi
 
 export GH_PROMPT_DISABLED=1
 
-gh auth login -p
+gh auth login -p https
 
 if [[ ! -d $LOCAL_REPOS_DIR ]] ; then mkdir -p $LOCAL_REPOS_DIR ; fi
 cd $LOCAL_REPOS_DIR

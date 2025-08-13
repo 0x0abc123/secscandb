@@ -4,6 +4,8 @@ import hashlib
 import json
 from pickledb import PickleDB
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from typing import List, Dict, Any
 
@@ -35,13 +37,23 @@ def get_project_db(project: str) -> PickleDB:
     return PickleDB(db_path)
     #return pickledb.load(db_path, auto_dump=True)
 
+# --- Static Files ---
+
+# Serve static files from ./dist/assets
+app.mount("/assets", StaticFiles(directory="dist/assets"), name="assets")
+
+# Serve index.html for root path
+@app.get("/")
+async def read_index():
+    return FileResponse(os.path.join("dist", "index.html"))
+
 # --- Endpoints ---
 
-@app.get("/list_projects", response_model=List[str])
+@app.get("/api/list_projects", response_model=List[str])
 def list_projects():
     return [name for name in os.listdir(DATA_DIR) if os.path.isdir(os.path.join(DATA_DIR, name))]
 
-@app.get("/get_project/{project}", response_model=Dict[str, Any])
+@app.get("/api/get_project/{project}", response_model=Dict[str, Any])
 def get_project(project: str):
     try:
         db = get_project_db(project)
@@ -49,7 +61,7 @@ def get_project(project: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error loading project: {e}")
 
-@app.post("/upsert_data", response_model=Dict[str, Any])
+@app.post("/api/upsert_data", response_model=Dict[str, Any])
 def upsert_data(payload: UpsertPayload):
     db = get_project_db(payload.project)
 

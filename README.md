@@ -27,10 +27,8 @@ uvicorn main:app --reload
 ```
 
 The API will be available at:
-[http://localhost:8000](http://localhost:8000)
+[http://localhost:8000/api](http://localhost:8000/api)
 
-The interactive API docs are available at:
-[http://localhost:8000/docs](http://localhost:8000/docs)
 
 ---
 
@@ -43,27 +41,27 @@ The interactive API docs are available at:
 
 ## API Endpoints
 
-### 1. `GET /list_projects`
+### 1. `GET /api/list_projects`
 
 Lists all existing projects (folder names under `data/`).
 
 ```bash
-curl http://localhost:8000/list_projects
+curl http://localhost:8000/api/list_projects
 ```
 
 ---
 
-### 2. `GET /get_project/{project}`
+### 2. `GET /api/get_project/{project}`
 
 Returns all key-value records (JSON objects) in the specified project.
 
 ```bash
-curl http://localhost:8000/get_project/my_project
+curl http://localhost:8000/api/get_project/my_project
 ```
 
 ---
 
-### 3. `POST /upsert_data`
+### 3. `POST /api/upsert_data`
 
 Creates or updates a key-value record in a project. The request payload must contain an object with the fields `title` and `loc`, which are hashed to create the record unique key
 
@@ -84,7 +82,7 @@ Creates or updates a key-value record in a project. The request payload must con
 #### Example cURL
 
 ```bash
-curl -X POST http://localhost:8000/upsert_data \
+curl -X POST http://localhost:8000/api/upsert_data \
   -H "Content-Type: application/json" \
   -d '{
     "project": "alpha",
@@ -92,7 +90,7 @@ curl -X POST http://localhost:8000/upsert_data \
       "title" : "Test1",
       "loc": "somewhere",
       "name": "Widget",
-      "status": "new"
+      "status": "POS"
     }
   }'
 ```

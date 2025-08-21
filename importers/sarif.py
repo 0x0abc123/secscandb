@@ -32,6 +32,18 @@ def import_sarif(fileToImport, repoName, apiUrl):
     def detailsGeneratorSemgrep(result_obj, rulesLookup):
         return detailsGeneratorDefault(result_obj, rulesLookup)
 
+    def detailsGeneratorTrivy(result_obj, rulesLookup):
+        text = ''
+        try:
+            text = result_obj['ruleId']
+            text = text + "\n" + result_obj['message']['text']
+            rule = rulesLookup[result_obj['ruleId']]
+            text = text + "\n" + rule['fullDescription']['text']
+        except:
+            pass
+        return text
+
+
     def detailsGeneratorDefault(result_obj, rulesLookup):
         text = ''
         try:
@@ -48,6 +60,7 @@ def import_sarif(fileToImport, repoName, apiUrl):
     detailsGenerators = {
         'gitleaks':detailsGeneratorGitleaks,
         'semgrep':detailsGeneratorSemgrep,
+        'trivy':detailsGeneratorTrivy,
         'default':detailsGeneratorDefault,
     }
 
